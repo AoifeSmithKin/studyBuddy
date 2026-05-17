@@ -1,0 +1,199 @@
+# 🧠 Study Buddy — AI-Powered Study Tool
+
+An interactive study tool built with React that uses Claude AI to transform any learning material into flashcards, quizzes, mind maps, simplified explanations, and summary notes. Designed for students (ages 14+) to make revision engaging and effective.
+
+![Study Buddy](https://img.shields.io/badge/React-18-blue) ![Vite](https://img.shields.io/badge/Vite-6-purple) ![Claude AI](https://img.shields.io/badge/Claude-Sonnet%204-orange) ![License](https://img.shields.io/badge/License-MIT-green)
+
+---
+
+## ✨ Features
+
+### 📚 Smart Material Input
+- **Paste text** — copy notes, textbook content, or any study material directly
+- **Upload files** — supports photos (JPG, PNG), PDFs, Word docs (.docx), PowerPoints (.pptx), Excel (.xlsx), and text files (.txt, .csv, .md)
+- **Image OCR** — AI reads text from photos of textbooks, handwritten notes, or whiteboards
+- **Built-in example** — try it instantly with a pre-loaded photosynthesis topic
+
+### 🎯 Six Study Methods
+
+| Method | What It Does | Learning Science Behind It |
+|--------|-------------|--------------------------|
+| 🃏 **Flash Cards** | AI generates Q&A cards from your material. Tap to flip, mark as known/needs practice. Growing deck — add more cards anytime. | **Active Recall** — retrieving information strengthens memory pathways |
+| 🧠 **Mind Map** | Visual web of connected ideas with a central topic and branches | **Dual Coding** — combining visual + verbal processing improves retention |
+| ✏️ **Quiz Me** | Multiple-choice questions with explanations and scoring | **Testing Effect** — self-testing is more effective than re-reading |
+| 💡 **Simplify** | ELI5 (Explain Like I'm 5) breakdowns with real-world analogies | **Feynman Technique** — if you can explain it simply, you truly understand it |
+| 🍅 **Pomodoro Timer** | 25-min focus sessions with short/long breaks, session counter | **Spaced Practice** — focused bursts with rest produce better learning |
+| 📝 **Summary Notes** | Key points + glossary of important terms with definitions | **Elaborative Interrogation** — organising knowledge aids comprehension |
+
+### 🔄 Unlimited Variation
+- **"Generate More"** button on every method creates fresh content each time
+- AI tracks previously generated questions and avoids repeating them
+- Flash card decks grow — new cards are appended, not replaced
+- Simplify uses different analogy themes each round (gaming, cooking, sports, etc.)
+- Mind maps reorganise from different perspectives each generation
+
+### 🖨️ Export & Print
+- **Save as PDF** — opens browser print dialog, choose "Save as PDF"
+- **Download as HTML** — self-contained file you can open and print anytime
+- Clean, printer-friendly formatting with white background
+- Each export is dated for organisation
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v18 or higher)
+- An [Anthropic API key](https://console.anthropic.com/) for Claude
+
+### Installation
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/YOUR_USERNAME/study-buddy.git
+cd study-buddy
+
+# 2. Install dependencies
+npm install
+
+# 3. Set up your API key
+cp .env.example .env
+# Edit .env and add your Anthropic API key
+
+# 4. Start the development server
+npm run dev
+```
+
+The app will open at `http://localhost:3000`.
+
+### Environment Variables
+
+Create a `.env` file in the root directory:
+
+```
+VITE_ANTHROPIC_API_KEY=sk-ant-your-key-here
+```
+
+> ⚠️ **Important:** Never commit your `.env` file. It's already in `.gitignore`.
+
+> ⚠️ **Security Note:** This app is designed for local/personal use. The API key is exposed to the browser in development mode. For production deployment, you should create a backend proxy to keep your API key server-side. See [Deployment](#deployment) below.
+
+---
+
+## 🏗️ Project Structure
+
+```
+study-buddy/
+├── public/
+│   └── favicon.svg          # Brain emoji favicon
+├── src/
+│   ├── main.jsx              # React entry point
+│   ├── index.css             # Global styles, animations, print CSS
+│   └── StudyBuddy.jsx        # Main app component (all features)
+├── .env.example              # Template for environment variables
+├── .gitignore
+├── index.html                # HTML entry point
+├── LICENSE                   # MIT License
+├── package.json
+├── README.md
+└── vite.config.js            # Vite configuration
+```
+
+---
+
+## 📖 How It Works
+
+### File Processing Pipeline
+
+Each file type has its own extraction method:
+
+| File Type | Method | Runs Where |
+|-----------|--------|-----------|
+| Photos (.jpg, .png) | Claude Vision API | Cloud |
+| PDFs (.pdf) | Claude Document API | Cloud |
+| Word (.docx) | mammoth.js | Browser (no API call) |
+| PowerPoint (.pptx) | JSZip + XML parsing | Browser (no API call) |
+| Excel (.xlsx) | SheetJS | Browser (no API call) |
+| Text (.txt, .csv, .md) | FileReader API | Browser (instant) |
+
+### AI Content Generation
+
+The app sends your material to Claude with carefully crafted prompts that:
+1. Request JSON-only responses for reliable parsing
+2. Include study-method-specific instructions (e.g. "use analogies a teenager would understand")
+3. Send a history of previously generated content so the AI creates fresh variations
+4. Handle response parsing with fallbacks for malformed JSON
+
+---
+
+## 🛠️ Tech Stack
+
+- **React 18** — UI framework
+- **Vite 6** — Build tool and dev server
+- **Claude API (Sonnet 4)** — AI content generation, image OCR, PDF reading
+- **mammoth.js** — .docx text extraction (browser-side)
+- **JSZip** — .pptx parsing (browser-side)
+- **SheetJS (xlsx)** — .xlsx/.xls parsing (browser-side)
+
+---
+
+## 🌐 Deployment
+
+### Static Hosting (with backend proxy)
+
+For production use, you should **not** expose your API key in the browser. Instead:
+
+1. Create a simple backend proxy (Node.js/Express, Cloudflare Worker, Vercel Serverless Function, etc.) that forwards requests to the Anthropic API with your key server-side
+2. Update the fetch URLs in `StudyBuddy.jsx` to point to your proxy
+3. Build and deploy:
+
+```bash
+npm run build    # Creates dist/ folder
+```
+
+Deploy the `dist/` folder to Vercel, Netlify, GitHub Pages, or any static host.
+
+### Local Use (simplest)
+
+For personal/family use, running locally with `npm run dev` is perfectly fine — the API key stays on your machine.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Some ideas:
+
+- [ ] Add spaced repetition scheduling to flashcards (SM-2 algorithm)
+- [ ] Dark/light theme toggle
+- [ ] Save study sessions to localStorage
+- [ ] Multi-language UI support
+- [ ] Add a "teach-back" mode where the student explains concepts to the AI
+- [ ] Integration with Google Classroom / Microsoft Teams
+
+### Development
+
+```bash
+npm run dev       # Start dev server with hot reload
+npm run build     # Production build
+npm run preview   # Preview production build locally
+```
+
+---
+
+## 📄 License
+
+MIT License — see [LICENSE](./LICENSE) for details.
+
+---
+
+## 🙏 Acknowledgements
+
+- [Anthropic Claude](https://www.anthropic.com/) — AI engine powering content generation
+- [mammoth.js](https://github.com/mwilliamson/mammoth.js) — Word document parsing
+- [JSZip](https://stuk.github.io/jszip/) — ZIP file handling for PowerPoint extraction
+- [SheetJS](https://sheetjs.com/) — Spreadsheet parsing
+- Study method science based on research into Active Recall, Spaced Repetition, the Feynman Technique, and the Testing Effect
+
+---
+
+Built with 💜 to make studying less painful and more effective.

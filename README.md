@@ -1,2 +1,23 @@
-# studyBuddy
-Study Buddy for learning
+{
+  "name": "study-buddy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI-powered study tool for students — flashcards, quizzes, mind maps, and more",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "mammoth": "^1.8.0",
+    "jszip": "^3.10.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.0"
+  }
+}
